@@ -1,0 +1,110 @@
+{
+  "name": "vantor",
+  "version": "0.1.0",
+   "description": "Sistema de pesaje para la industria del carbón.",
+  "author": "Cimaverso <gerencia@cimaverso.com>",
+  "private": true,
+  "main": "public/electron.js",
+  "homepage": "./",
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fontsource/montserrat": "^5.0.18",
+    "@heroicons/react": "^2.1.4",
+    "@mui/icons-material": "^5.15.21",
+    "@mui/material": "^5.15.21",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "autoprefixer": "^10.4.19",
+    "axios": "^1.7.2",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-is-dev": "^3.0.1",
+    "electron-squirrel-startup": "^1.0.1",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.503.0",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
+    "node-gyp": "^10.1.0",
+    "postcss": "^8.4.38",
+    "react": "^18.3.1",
+    "react-datepicker": "^8.2.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.2.1",
+    "react-modal": "^3.16.3",
+    "react-router-dom": "^6.25.1",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.8.0",
+    "react-table": "^7.8.0",
+    "tailwindcss": "^3.4.4",
+    "wait-on": "^7.2.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && npm run electron\"",
+    "electron-dev": "concurrently \"cross-env BROWSER=NONE npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build-electron": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "com.cimaverso.vantor",
+    "productName": "Vantor",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "public/electron.js",
+      "public/preload.js",
+      "package.json"
+    ],
+
+    "extraResources": [
+      {
+        "from": "public/assets/",
+        "to": "assets"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon/icono_vantor.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "path-browserify": "^1.0.1",
+    "workbox-webpack-plugin": "^7.1.0",
+    "electron": "^31.2.1",
+    "electron-builder": "^24.13.3"
+  }
+
+}
