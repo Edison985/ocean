@@ -1,7 +1,7 @@
 {
   "name": "vantor",
-  "version": "0.1.0",
-   "description": "Sistema de pesaje para la industria del carbón.",
+  "version": "0.1.1",
+  "description": "Sistema de pesaje para la industria del carbón.",
   "author": "Cimaverso <gerencia@cimaverso.com>",
   "private": true,
   "main": "public/electron.js",
@@ -24,6 +24,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^3.0.1",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.503.0",
     "moment": "^2.30.1",
@@ -51,7 +52,8 @@
     "electron": "electron .",
     "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && npm run electron\"",
     "electron-dev": "concurrently \"cross-env BROWSER=NONE npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "build-electron": "npm run build && electron-builder"
+    "build-electron": "npm run build && electron-builder",
+    "electron-pack": "npm run build && electron-builder --win --x64"
   },
   "build": {
     "appId": "com.cimaverso.vantor",
@@ -64,6 +66,13 @@
       "public/electron.js",
       "public/preload.js",
       "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Edison985",
+        "repo": "ocean"
+      }
     ],
 
     "extraResources": [
@@ -101,10 +110,9 @@
     ]
   },
   "devDependencies": {
-    "path-browserify": "^1.0.1",
-    "workbox-webpack-plugin": "^7.1.0",
     "electron": "^31.2.1",
-    "electron-builder": "^24.13.3"
+    "electron-builder": "^24.13.3",
+    "path-browserify": "^1.0.1",
+    "workbox-webpack-plugin": "^7.1.0"
   }
-
 }

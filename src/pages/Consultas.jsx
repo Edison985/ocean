@@ -119,8 +119,12 @@ function Consultas() {
       setClientes(clientesResponse.data);
       setProveedores(proveedoresResponse.data);
       setTerceros(tercerosResponse.data);
-      setProductos(productosResponse.data);
-      setVarios(variosResponse.data);
+      const dataTransformadaProducto = transformarDatosProducto(productosResponse.data);
+      setProductos(dataTransformadaProducto);
+
+      const dataTransformadaVarios = transformarDatosProducto(variosResponse.data);
+      setVarios(dataTransformadaVarios);
+
       setDestinos(destinosResponse.data);
       setOrigenes(origenesResponse.data);
       setPatios(patiosResponse.data);
@@ -197,24 +201,23 @@ function Consultas() {
 
         case "PRODUCTO":
           try {
-            const url = `https://ocean-syt-production.up.railway.app/producto/1`;
+            const url = "https://ocean-syt-production.up.railway.app/producto/1";
             response = await axios.get(url, { headers });
             const dataTransformadaProducto = transformarDatosProducto(response.data);
-            fetchProcesosProducto(dataTransformadaProducto);
-            fetchUnidadesMedida(dataTransformadaProducto);
             setProductos(dataTransformadaProducto);
+            fetchProcesosProducto();
+            fetchUnidadesMedida();
+ 
           } catch (error) {
             console.error("Error fetching products data:", error);
           }
           break;
 
         case "VARIOS":
-          apiUrl = `https://ocean-syt-production.up.railway.app/producto/2`;
+          apiUrl = "https://ocean-syt-production.up.railway.app/producto/2";
           response = await axios.get(apiUrl, { headers });
           const dataTransformadaVarios = transformarDatosProducto(response.data);
           setVarios(dataTransformadaVarios);
-          fetchUnidadesMedida(dataTransformadaVarios);
-          break;
 
         case "VEHICULO":
           apiUrl = `https://ocean-syt-production.up.railway.app/vehiculo/`;
@@ -300,7 +303,7 @@ function Consultas() {
   const fetchProcesosProducto = async () => {
     try {
       const response = await axios.get(
-        "https://ocean-syt-production.up.railway.app/proceso"
+        "https://ocean-syt-production.up.railway.app/proceso/"
       );
       setProcesosProducto(response.data);
     } catch (error) {
@@ -399,8 +402,6 @@ function Consultas() {
     }
   };
 
-  
-  
   const handleDoubleClick = (record) => {
     if (["INGRESO", "DESPACHO", "SERVICIOS"].includes(formType)) {
       let formTypeToNavigate;
@@ -546,17 +547,18 @@ function Consultas() {
     ],
 
     PRODUCTO: [
-      { name: "producto_id", title: "ID", hidden: true },
-      { name: "producto_codigo", title: "CÓDIGO" },
-      { name: "producto_nombre", title: "PRODUCTO" },
-      { name: "producto_medida", title: "UNIDAD MEDIDA" },
-      { name: "producto_proceso", title: "PROCESO PRODUCTO" },
+      { name: "prod_id", title: "ID", hidden: true },
+      { name: "prod_codigo", title: "CÓDIGO" },
+      { name: "prod_nombre", title: "PRODUCTO" },
+      { name: "prod_medida", title: "UNIDAD MEDIDA" },
+      { name: "prod_proceso", title: "PROCESO PRODUCTO" },
     ],
     VARIOS: [
-      { name: "producto_id", title: "ID", hidden: true },
-      { name: "producto_codigo", title: "CÓDIGO" },
-      { name: "producto_nombre", title: "PRODUCTO" },
-      { name: "producto_medida", title: "UNIDAD MEDIDA" },
+      { name: "prod_id", title: "ID", hidden: true },
+      { name: "prod_codigo", title: "CÓDIGO" },
+      { name: "prod_nombre", title: "PRODUCTO" },
+      { name: "prod_medida", title: "UNIDAD MEDIDA" },
+
       
     ],
     VEHICULO: [
@@ -569,7 +571,6 @@ function Consultas() {
     ],
     CONDUCTOR: [
       { name: "conduct_id", title: "ID", hidden: true },
-      { name: "conduct_codigo", title: "Código" },
       { name: "conduct_nombre", title: "Conductor" },
       { name: "conduct_cedula", title: "Cedula" },
       { name: "conduct_telefono", title: "Telefono" },

@@ -102,24 +102,24 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
             ent_nit: entity.ent_nit,
           };
         } else if (formType === "PRODUCTO" || formType === "VARIOS") {
-          endpoint = `https://ocean-syt-production.up.railway.app/producto/${entity.producto_id}`;
+          endpoint = `https://ocean-syt-production.up.railway.app/producto/${entity.prod_id}`;
 
           const selectedUnidadMedida = unidadesMedida.find(
-            (u) => u.um_nombre === entity.producto_medida || u.um_id == entity.producto_medida
+            (u) => u.um_nombre === entity.prod_medida || u.um_id == entity.prod_medida
           );
           const selectedProcesoProducto = procesosProducto.find(
-            (p) => p.pp_nombre === entity.producto_proceso || p.pp_id == entity.producto_proceso
+            (p) => p.pp_nombre === entity.prod_proceso || p.pp_id == entity.prod_proceso
           );
         
           // Actualizar la entidad con los nombres (solo para mostrar en frontend)
-          if (selectedUnidadMedida) entity.producto_medida = selectedUnidadMedida.um_nombre;
-          if (selectedProcesoProducto) entity.producto_proceso = selectedProcesoProducto.pp_nombre;
+          if (selectedUnidadMedida) entity.prod_medida = selectedUnidadMedida.um_nombre;
+          if (selectedProcesoProducto) entity.prod_proceso = selectedProcesoProducto.pp_nombre;
         
           dataToSend = {
-            prod_codigo: entity.producto_codigo,
-            prod_nombre: entity.producto_nombre,
-            prod_idunidadmedida: parseInt(selectedUnidadMedida?.um_id || entity.producto_medida),
-            prod_idprocesoproducto: parseInt(selectedProcesoProducto?.pp_id || entity.producto_proceso),
+            prod_codigo: entity.prod_codigo,
+            prod_nombre: entity.prod_nombre,
+            prod_idunidadmedida: parseInt(selectedUnidadMedida?.um_id || entity.prod_medida),
+            prod_idprocesoproducto: parseInt(selectedProcesoProducto?.pp_id || entity.prod_proceso),
           };
           
           
@@ -152,6 +152,8 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
           dataToSend = {
             comp_codigo: entity.comp_codigo,
             comp_nombre: entity.comp_nombre,
+            comp_nit: entity.comp_nit,
+            comp_telefeono: entity.comp_telefeono,
           };
         } else if (formType === "FACTURA") {
           endpoint = `https://ocean-syt-production.up.railway.app/factura/${entity.fac_id}`;
@@ -443,7 +445,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
       url = "https://ocean-syt-production.up.railway.app/entidad/";
 
     } else if (formType === "PRODUCTO" || formType === "VARIOS") {
-      if (!newRow.producto_codigo || !newRow.producto_nombre) {
+      if (!newRow.prod_codigo || !newRow.prod_nombre) {
         setNotification({
           message: "El código y el nombre son requeridos",
           type: "error",
@@ -454,12 +456,12 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
       const tipoProductodMap = { PRODUCTO: 1, VARIOS: 2 };
 
       dataToSend = {
-        prod_codigo: newRow.producto_codigo,
-        prod_nombre: newRow.producto_nombre,
+        prod_codigo: newRow.prod_codigo,
+        prod_nombre: newRow.prod_nombre,
         prod_idtipoproducto: tipoProductodMap[formType], // Asegúrate de que este mapeo es correcto
-        prod_idunidadmedida: parseInt(newRow.producto_medida),
+        prod_idunidadmedida: parseInt(newRow.prod_medida),
         prod_idprocesoproducto:
-          formType === "VARIOS" ? 4 : parseInt(newRow.producto_proceso),
+          formType === "VARIOS" ? 4 : parseInt(newRow.prod_proceso),
       };
       setProductos([...productos, newRow]);
       setVarios([...varios, newRow]);
@@ -470,9 +472,9 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
       url = "https://ocean-syt-production.up.railway.app/producto/";
 
     } else if (formType === "CONDUCTOR") {
-      if (!newRow.conduct_nombre || !newRow.conduct_codigo) {
+      if (!newRow.conduct_nombre ) {
         setNotification({
-          message: "El nombre y la codigo son requeridos",
+          message: "El nombre es requerido",
           type: "error",
         });
         return;
@@ -502,7 +504,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
       };
       setTrailers([...trailers, newRow]);
       setNotification({message: "Nuevo Trailer guardado",type: "success",});
-      url = "https://ocean-syt-production.up.railway.app/trailer";
+      url = "https://ocean-syt-production.up.railway.app/trailer/";
 
     } else if (formType === "FACTURA") {
       dataToSend = {
@@ -583,7 +585,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
       
       setCompradores([...compradores, newRow]);
       setNotification({message: "Nuevo comprador guardado",type: "success",});
-      url = "https://ocean-syt-production.up.railway.app/comprador";
+      url = "https://ocean-syt-production.up.railway.app/comprador/";
 
     } else if (formType === "TRANSPORTADORA") {
       if (!newRow.trans_nombre || !newRow.trans_codigo) {
@@ -631,53 +633,6 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
     }
   };
 
-  const handleEliminar = async (rowIndex) => {
-    const token = sessionStorage.getItem("token");
-    try {
-      const item = tableData[rowIndex];
-      let url, idField;
-  
-      if (formType === "PRODUCTO" || formType === "VARIOS") {
-        url = `https://ocean-syt-production.up.railway.app/producto/${item.producto_id}`;
-      } else if (formType === "CLIENTE" || formType === "PROVEEDOR" || formType === "TERCERO") {
-        url = `https://ocean-syt-production.up.railway.app/entidad/${item.ent_id}`;
-      } else if (formType === "VEHICULO") {
-        url = `https://ocean-syt-production.up.railway.app/vehiculo/${item.vehi_id}`;
-      } else if (formType === "CONDUCTOR") {
-        url = `https://ocean-syt-production.up.railway.app/conductor/${item.conduct_id}`;
-      } else if (formType === "TRAILER") {
-        url = `https://ocean-syt-production.up.railway.app/trailer/${item.trai_id}`;
-      } else if (formType === "ORIGEN") {
-        url = `https://ocean-syt-production.up.railway.app/origen/${item.ori_id}`;
-      } else if (formType === "DESTINO") {
-        url = `https://ocean-syt-production.up.railway.app/destino/${item.dest_id}`;
-      } else if (formType === "PATIO") {
-        url = `https://ocean-syt-production.up.railway.app/patio/${item.pat_id}`;
-      } else if (formType === "COMPRADOR") {
-        url = `https://ocean-syt-production.up.railway.app/comprador/${item.comp_id}`;
-      } else if (formType === "TRANSPORTADORA") {
-        url = `https://ocean-syt-production.up.railway.app/transportadora/${item.trans_id}`;
-      } else if (formType === "FACTURA") {
-        url = `https://ocean-syt-production.up.railway.app/factura/${item.fac_id}`;
-      } else if (formType === "MEDIDA") {
-        url = `https://ocean-syt-production.up.railway.app/medida/${item.um_id}`;
-      } 
-  
-      await axios.delete(url, {
-         headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      const updatedData = [...tableData];
-      updatedData.splice(rowIndex, 1); // Quitar el elemento eliminado
-  
-      setTableData(updatedData);
-      setNotification({ message: 'Eliminado con éxito', type: 'success' });
-    } catch (error) {
-      setNotification({ message: `Error eliminando: ${error.message}`, type: 'error' });
-    }
-  };
   
   const handleContextMenu = (e, rowIndex) => {
     e.preventDefault();
@@ -767,7 +722,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
                 ${column.name === 'consecutivo_tiquete' ? 'sticky left-0 bg-white z-[10]' :''}`}
 
               onDoubleClick={() => {
-                if (["consecutivo", "consecutivo_tiquete", "tipo","peso_neto","unidad_medida","conductor_nombre","conductor_cedula",].includes(column.name)) {
+                if (["consecutivo", "consecutivo_tiquete", "tipo","peso_neto","unidad_medida","conductor_nombre","conductor_cedula",, "producto_codigo", "producto_nombre"].includes(column.name)) {
                   handleDoubleClickRegistro(record); // Aquí invocamos la función
                 } else {
                   handleDoubleClick(rowIndex, column.name, record[column.name]);
@@ -777,14 +732,14 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
             >
               {editingCell &&
               editingCell.rowIndex === rowIndex &&
-              editingCell.columnName === column.name ? (["consecutivo", "producto_nombre", "producto_codigo", "consecutivo_tiquete", "tipo","peso_neto","unidad_medida","conductor_nombre","conductor_cedula",].includes(column.name) ? (
+              editingCell.columnName === column.name ? (["consecutivo", "consecutivo_tiquete", "tipo","peso_neto","unidad_medida","conductor_nombre","conductor_cedula"].includes(column.name) ? (
                   record[column.name]
                 ) : column.name === "conductor_nombre" &&
                   formType === "VEHICULO" &&
                   !isAddingNewRow ? (
                   record[column.name]
                 ) : // Renderizar los campos editables para otros casos
-                column.name === "producto_medida" ? (
+                column.name === "prod_medida" ? (
                   <select
                     value={editedValue}
                     onChange={handleEditCellChange}
@@ -801,7 +756,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
                       </option>
                     ))}
                   </select>
-                ) : column.name === "producto_proceso" ? (
+                ) : column.name === "prod_proceso" ? (
                   <select
                     value={editedValue}
                     onChange={handleEditCellChange}
@@ -1228,7 +1183,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
         <tr>
           {columns.map((column) => (
             <td key={column.name} className="py-2 px-2 border-b">
-              {column.name === "producto_medida" ? (
+              {column.name === "prod_medida" ? (
                 <select
                   value={newRow[column.name] || ""}
                   onChange={(e) => handleNewRowChange(e, column.name)}
@@ -1241,7 +1196,7 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
                     </option>
                   ))}
                 </select>
-              ) : column.name === "producto_proceso" ? (
+              ) : column.name === "prod_proceso" ? (
                 <select
                   value={newRow[column.name] || ""}
                   onChange={(e) => handleNewRowChange(e, column.name)}
@@ -1329,34 +1284,6 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
         />
       )}
       
-      {contextMenu.show && (
-        <div
-          className="absolute bg-white border border-gray-200 rounded shadow-lg"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-        >
-          {/* Solo mostrar el botón Eliminar si no es INGRESO, DESPACHO o SERVICIOS */}
-          {!(formType === 'INGRESO' || formType === 'DESPACHO' || formType === 'SERVICIOS') && (
-            <button
-              onClick={() => handleContextMenuAction("Eliminar")}
-              className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 font-semibold"
-            >
-              Eliminar
-            </button>
-          )}
-        </div>
-      )}
-
-      
-      <ModalConfirmacion
-        show={confirmDelete.show}
-        title={`¿Eliminar ${formType}?`}  
-        message={`¿Estás seguro de eliminar este ${formType}? No podrás revertirlo.`}  
-        onCancel={() => setConfirmDelete({ show: false, rowIndex: null })}
-        onConfirm={async () => {
-          await handleEliminar(confirmDelete.rowIndex);
-          setConfirmDelete({ show: false, rowIndex: null });
-        }}
-      />
       <table className="min-w-full border-collapse">
         {renderHeader()}
         {renderBody()}

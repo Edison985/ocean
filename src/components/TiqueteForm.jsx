@@ -750,7 +750,7 @@ const TiqueteForm = ({ formType: initialFormType, initialData }) => {
                   options={trailerOptions}
                   onChange={handleTrailerChange}
                   value={trailerInfo.id}
-                  apiUrl="http://localhost:8000/trailer/"
+                  apiUrl="https://ocean-syt-production.up.railway.app/trailer/"
                   fieldType="trailer"
                   showAddNew={true}
                   className="appearance-none text-xs 2xl:text-base w-full h-7 border-2 border-[#6D80A6] rounded p-1 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-[#6D80A6]"

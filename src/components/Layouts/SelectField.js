@@ -12,7 +12,7 @@ const fieldsConfig = {
     { key: 'conduct_telefono', placeholder: 'Ingrese número de telefono' }
   ],  
   trailer: [
-    { key: 'trai_trailer', placeholder: 'Ingrese nuevo tráiler' }
+    { key: 'trai_placa', placeholder: 'Ingrese nuevo tráiler' }
   ], 
   factura: [
     { key: 'fac_fecha', placeholder: 'Ingrese nueva factura' }
