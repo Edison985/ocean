@@ -1,6 +1,6 @@
 {
   "name": "vantor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Sistema de pesaje para la industria del carbón.",
   "author": "Cimaverso <gerencia@cimaverso.com>",
   "private": true,

@@ -537,10 +537,7 @@ const TiqueteForm = ({ formType: initialFormType, initialData }) => {
         data = despachoFormRef.current.getFormData();
       }
 
-      
-
       await handleActualizarRegistro(data);
-      await cerrarRegistro();
     } finally {
       setIsProcessing(false);
     }
@@ -582,28 +579,9 @@ const TiqueteForm = ({ formType: initialFormType, initialData }) => {
     }
   };
 
-  const cerrarRegistro = async () => {
-    const token = sessionStorage.getItem('token');
-    const reg_id = initialData.registro_id;
-
-    try {
-      await axios.put(
-        `https://ocean-syt-production.up.railway.app/registro/cerrar/${reg_id}`,
-        {}, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      setNotification({ message: 'Error al cerrar el registro', type: 'error' });
-    }
-  };
 
   const handleSalir = async () => {
     if (isHistorial || isTiquete || isFinalizing) {
-      await cerrarRegistro();
       navigate("/registro")
 
     } else {

@@ -657,36 +657,10 @@ const Table = ({columns,data,editable,onDoubleClickRow,showAddButton,formType,se
     }
   };
   
-  const handleDoubleClickRegistro = async (record) => {
-    const token = sessionStorage.getItem("token");
-
-    try {
-      await axios.put(
-        `https://ocean-syt-production.up.railway.app/registro/abrir/${record.registro_id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      onDoubleClickRow && onDoubleClickRow(record); 
-
-    } catch (error) {
-      if (error.response?.status === 400 || error.response?.status === 404) {
-        setNotification({
-          message: 'El registro está ocupado por otro usuario.',
-          type: 'alert',
-        });
-      } else {
-        setNotification({
-          message: 'Error al abrir el registro',
-          type: 'error',
-        });
-      }
-    }
+  const handleDoubleClickRegistro = (record) => {
+    onDoubleClickRow && onDoubleClickRow(record);
   };
+
 
   const renderHeader = () => (
     <thead>

@@ -151,14 +151,6 @@ function Inicio() {
               </div>
             </div>
 
-            {/* Botones de acción */}
-            <div className="m-2 p-2 flex justify-end gap-4">
-              <Link to="/formulario">
-                <button className="bg-white font-bold px-6 py-3 hover:drop-shadow-2xl hover:bg-[#6D80A6] hover:text-[#f2f2f2] rounded">
-                  CREAR INGRESO
-                </button>
-              </Link>
-            </div>
           </div>
         </div>
       </div>
